@@ -14,7 +14,6 @@ function loadData() {
 
     data_sets = csv[3];
     sourceDir = csv[4][0];
-    //imageDir = csv[5][0];
 
     addAnnot();
     loadFullCsv(data_sets);
@@ -32,14 +31,7 @@ function loadFullCsv(data_sets) {
       fullFileUnfiltered[csv[0][j]] = [];
       csvNames.push([csv[0][j]]);
     }
-/*
-    for (i = 0; i < data_sets.length; i++) {
-      if (data_sets[i] in fullFileUnfiltered){
-        dataSets.push(data_sets[i]);
-      }
-    }
-    addData();
-*/
+
     for (i = 1; i < csv.length; i ++) {
       for (j = 0; j < csv[0].length; j ++) {
         if (j != 0)
@@ -90,8 +82,6 @@ function fillBox () {
   var annot = document.getElementById("Annotation");
   var dataType = document.getElementById("dataType");
 
-  //box.value = getArray(annot.value, dataType.value);
-  //box.value = calculateSkeleton();
 }
 
 function getArray(annotation, dataType) {
@@ -153,15 +143,6 @@ function arrayAvg(arr) {
 //skeletonNames comes from Interface and lists joints to be included
 function calculateSkeleton() {
 
-//   for (count = 0; count < skeletonNames.length; count++){
-//   	
-//     x = arrayAvg(fullFileUnfiltered[skeletonNames[count].concat('X')]);
-//     y = arrayAvg(fullFileUnfiltered[skeletonNames[count].concat('Y')]);
-//     z = arrayAvg(fullFileUnfiltered[skeletonNames[count].concat('Z')]);
-//     skeletonXY.push([x,y]);
-//     skeletonZY.push([z,y]);
-//     skeletonZX.push([z,x]);
-//   }
   document.getElementById("Annotation").selectedIndex = 0;
   document.getElementById("VizType").selectedIndex = 0;
   visualize();

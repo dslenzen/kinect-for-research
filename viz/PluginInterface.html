@@ -17,10 +17,6 @@
 </style>
 <body>
 
-<!-- 
-<h2>Data Selection</h2>
- -->
-
 <div id="section">
 <table>
   <tr>
@@ -41,6 +37,9 @@
   </tr>
 </div>
 </table>
+<label><input type="checkbox" id="GestureSpace" checked>show gesture space<br></label>
+
+<input type="range" id="slider" min="0" max="100" step="1" value="0">
 <p>
 
 <button onclick="visualize()">Visualize</button>
@@ -49,7 +48,6 @@
 <script>
 //initialize variables
 var annotations = {}; //can be accessed like "annotations['Below'].start"
-//var dataSets = [];
 var sourceDir;
 var imageDir;
 var annotationNames = [];
@@ -86,23 +84,23 @@ function visualize() {
 }
 function xyVis() {
 	var annot = document.getElementById("Annotation");
-	console.log(annot.value);
-	//var dataType = document.getElementById("dataType");
+
 	kinectData2 = getKinectData(annot.value, 'WristLeftX', 'WristLeftY');	
 	kinectData3 = getKinectData(annot.value, 'WristRightX', 'WristRightY');
 
 	
 	var skeletonXY = [];
-	var skeletonZY = [];
-	var skeletonZX = [];
+	//var skeletonZY = [];
+	//var skeletonZX = [];
 	
 	for (count = 0; count < skeletonNames.length; count++){
+		//console.log(count);
   		x = arrayAvg(getKinectDataSkel(annot.value, skeletonNames[count].concat('X')));
   		y = arrayAvg(getKinectDataSkel(annot.value, skeletonNames[count].concat('Y')));
-  		z = arrayAvg(getKinectDataSkel(annot.value, skeletonNames[count].concat('Z')));
+  		//z = arrayAvg(getKinectDataSkel(annot.value, skeletonNames[count].concat('Z')));
     	skeletonXY.push([x,y]);
-    	skeletonZY.push([z,y]);
-    	skeletonZX.push([z,x]);
+    	//skeletonZY.push([z,y]);
+    	//skeletonZX.push([z,x]);
   	}
   	
   	var minX = 0.0;
@@ -117,17 +115,11 @@ function xyVis() {
   			minY = Math.min(minY,kinectData2[counter][1],kinectData3[counter][1]);
   		}
   		maxY = Math.max(maxY,kinectData2[counter][1],kinectData3[counter][1]);
-//  		console.log(counter);
-//   		if (minX > min(kinectData2[i][0],kinectData3[i][0]) {
-//   			minX = min(kinectData2[i][0],kinectData3[i][0]);
-//   		}
   	}
 	
 	d3.select("body").selectAll("svg").remove();
 
 	var margin = {top: 20, right: 20, bottom: 30, left: 40},
-	    //width = 650 - margin.left - margin.right,
-	    //height = 600 - margin.top - margin.bottom;
 	    width = 600,
 	    height = 1200;
 	   
@@ -149,11 +141,6 @@ function xyVis() {
 		.x(function(d) {return xScale(d[0]); })
 		.y(function(d) {return yScale(d[1]); })
 		.interpolate("linear");
-		
-	console.log(minY);
-	console.log(maxY);
-	console.log(yScale(minY));
-	console.log(yScale(maxY));
 	
 	svg.append("path")
 			.attr("d", lineFunction(kinectData2))
@@ -176,27 +163,27 @@ function xyVis() {
 			.attr("opacity", 0.5)
 			.attr("fill", "none");
 	
-	//console.log(min(maxXR));
-	svg.append("rect")
-			.attr("x", xScale(minX))
-			.attr("y", yScale(minY))
-			.attr("width", (xScale(maxX) - xScale(minX)))
-			.attr("height", (yScale(maxY) - yScale(minY)))
-			.attr("stroke", "black")
-			.attr("stroke-width", 1)
-			.attr("opacity", 0.1)
-			.attr("fill", "orange");
+
+	if (document.getElementById("GestureSpace").checked)
+	{
+		svg.append("rect")
+				.attr("x", xScale(minX))
+				.attr("y", yScale(minY))
+				.attr("width", (xScale(maxX) - xScale(minX)))
+				.attr("height", (yScale(maxY) - yScale(minY)))
+				.attr("stroke", "black")
+				.attr("stroke-width", 1)
+				.attr("opacity", 0.1)
+				.attr("fill", "orange");
+	}
 }
 function zxVis() {
 	var annot = document.getElementById("Annotation");
-	//var dataType = document.getElementById("dataType");
 	kinectData2 = getKinectData(annot.value, 'WristLeftZ', 'WristLeftX');
 	kinectData3 = getKinectData(annot.value, 'WristRightZ', 'WristRightX');
 	d3.select("body").selectAll("svg").remove();
 
 	var margin = {top: 110, right: -20, bottom: 30, left: -580},
-	    //width = 650 - margin.left - margin.right,
-	    //height = 600 - margin.top - margin.bottom;
 	    width = 1000,
 	    height = 1000;
 	   
@@ -242,14 +229,11 @@ function zxVis() {
 }
 function zyVis() {
 	var annot = document.getElementById("Annotation");
-	//var dataType = document.getElementById("dataType");
 	kinectData2 = getKinectData(annot.value, 'WristLeftZ', 'WristLeftY');
 	kinectData3 = getKinectData(annot.value, 'WristRightZ', 'WristRightY');
 	d3.select("body").selectAll("svg").remove();
 	
 	var margin = {top: 10, right: 20, bottom: 30, left: -580},
-	    //width = 650 - margin.left - margin.right,
-	    //height = 600 - margin.top - margin.bottom;
 	    width = 1000,
 	    height = 1000;
 	   
